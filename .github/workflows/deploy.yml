@@ -1,4 +1,4 @@
-name: 🚀 Deploy to GitHub Pages
+name: 🚀 Deploy Astro to GitHub Pages
 
 on:
   push:
@@ -6,20 +6,31 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: read      # to clone your code
+  pages: write        # to publish the site
+  id-token: write     # required by configure-pages/deploy-pages
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
+      # 1. Check out your repo
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '18'
+
+      # 2. Build with Astro (installs deps, runs `astro build`)
       - uses: withastro/action@v3
+        # Optional inputs (defaults are fine):
+        # with:
+        #   node-version: '18'
+        #   package-manager: 'npm'
+
+      # 3. Configure the Pages environment
+      - uses: actions/configure-pages@v5
+
+      # 4. Upload the generated `docs/` folder
+      - uses: actions/upload-pages-artifact@v3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: gh-pages
-          folder: docs
+          path: docs
+
+      # 5. Deploy to GitHub Pages
+      - uses: actions/deploy-pages@v4
