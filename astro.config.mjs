@@ -1,26 +1,22 @@
+// astro.config.mjs
 // @ts-check
 import { defineConfig } from 'astro/config';
-import tailwind         from '@astrojs/tailwind';
-import mdx              from '@astrojs/mdx';
+import tailwind from '@astrojs/tailwind';
+import mdx from '@astrojs/mdx';
 import rehypePrettyCode from 'rehype-pretty-code';
-import remarkToc        from 'remark-toc';
+import remarkToc from 'remark-toc';
 
 export default defineConfig({
-//  site: 'https://genai-data-engineering.com'
-  // your user‑page URL
   site: 'https://abhinav-kanduri.github.io',
-
-  // serve from root
   base: '/',
-
-  // static output into docs/
   output: 'static',
-  build: { dist: 'docs' },
+  // We’ll use the default “dist” folder:
+  // build: { dist: 'docs' },  <-- remove or comment out if present
 
   integrations: [
     tailwind(),
     mdx(),
-          // <-- add this
+    // github(),  <-- remove this line if present
   ],
 
   markdown: {
@@ -28,9 +24,17 @@ export default defineConfig({
     rehypePlugins: [
       [
         rehypePrettyCode,
-        { /* your existing config */ }
-      ]
+        {
+          theme: { light: 'github-light', dark: 'github-dark' },
+          keepBackground: true,
+          onVisitLine(node) {
+            if (node.children.length === 0) {
+              node.children = [{ type: 'text', value: ' ' }];
+            }
+          },
+        },
+      ],
     ],
-    shikiConfig: { wrap: true }
-  }
+    shikiConfig: { wrap: true },
+  },
 });
