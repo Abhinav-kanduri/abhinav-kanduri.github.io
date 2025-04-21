@@ -1,4 +1,4 @@
-# .github/workflows/deploy.yml
+# File: .github/workflows/deploy.yml
 name: 🚀 Deploy Astro to GitHub Pages
 
 on:
@@ -7,31 +7,34 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read      # to clone your code
+  contents: read      # to clone your repo
   pages: write        # to publish to GitHub Pages
-  id-token: write     # required by configure-pages/deploy-pages
+  id-token: write     # required by configure‑pages/deploy‑pages
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository
+      # 1. Check out your code
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Build & Deploy with Astro
+      # 2. Build + upload Pages artifact (dist/)
+      - name: Build & package for Pages
         uses: withastro/action@v3
-        # by default this will:
-        # 1) npm ci
-        # 2) npm run build
-        # 3) package the "dist" folder for deployment
+        with:
+          path: '.'       # root of your Astro project
 
+      # 3. Tell GitHub we’re using Actions for Pages
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload build output
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist      # matches Astro’s default output directory
-
+      # 4. Deploy the previously-uploaded artifact to gh-pages
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
+        with:
+          publish_dir: dist # the directory to deploy
+          github_token: ${{ secrets.GITHUB_TOKEN }} # auto-generated token for this repo
+          publish_branch: gh-pages # the branch to deploy to (default: gh-pages)
+          publish_dir: dist # the directory to deploy (default: dist)
+          publish_url: https://abhinav-kanduri.github.io/ # the URL to publish to (default: https://<USERNAME>.github.io/<REPO_NAME>)
