@@ -7,42 +7,31 @@ import remarkToc        from 'remark-toc';
 import github           from '@astrojs/github';
 
 export default defineConfig({
-  // 1. Your canonical site URL for sitemaps, etc.
-  site: 'https://abhinav-kanduri.github.io/blog-Abhinav',
+//  site: 'https://genai-data-engineering.com'
+  // your user‑page URL
+  site: 'https://abhinav-kanduri.github.io',
 
-  // 2. Base path under which your site will be served
-  base: '/blog-Abhinav/',
+  // serve from root
+  base: '/',
 
-  // 3. Static output mode + output folder
+  // static output into docs/
   output: 'static',
-  build: {
-    dist: 'docs',           // Astro will emit into /docs
-  },
+  build: { dist: 'docs' },
 
-  // 4. Integrations
   integrations: [
     tailwind(),
     mdx(),
-    github(),               // <-- GitHub Pages integration
+    github(),           // <-- add this
   ],
 
-  // 5. Markdown settings (unchanged)
   markdown: {
-    remarkPlugins: [ remarkToc ],
+    remarkPlugins: [remarkToc],
     rehypePlugins: [
       [
         rehypePrettyCode,
-        {
-          theme: { light: 'github-light', dark: 'github-dark' },
-          keepBackground: true,
-          onVisitLine(node) {
-            if (node.children.length === 0) {
-              node.children = [{ type: 'text', value: ' ' }];
-            }
-          },
-        },
-      ],
+        { /* your existing config */ }
+      ]
     ],
-    shikiConfig: { wrap: true },
-  },
+    shikiConfig: { wrap: true }
+  }
 });

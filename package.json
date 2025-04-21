@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://abhinav-kanduri.github.io/genai-data-engineering-blog",
+  "homepage": "https://abhinav-kanduri.github.io",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
