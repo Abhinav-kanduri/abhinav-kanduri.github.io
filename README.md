@@ -54,7 +54,7 @@ This is more than a blog — it's a **knowledge hub** built using Astro and Mark
 │   │       └── firebase-llm.md
 └── package.json
 
-
+```
 
 
 🧞 Available Commands
