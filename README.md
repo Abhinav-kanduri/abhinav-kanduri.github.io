@@ -4,7 +4,7 @@ Welcome to **Abhinav's Generative AI Blog**, your go-to destination to start bui
 
 Whether you're a beginner or an experienced ML engineer, this blog brings you step-by-step guides, use cases, and career insights from the AI frontier.
 
-![Generative AI Banner](https://github.com/withastro/astro/assets/2244813/a0a5533c-a856-4198-8470-2d67b1d7c554)
+![Generative AI Banner](https://github.com/Abhinav-kanduri/blog-Abhinav/blob/main/images/banner-AI.png)
 
 ---
 
