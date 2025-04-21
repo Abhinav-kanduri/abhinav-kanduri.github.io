@@ -25,7 +25,6 @@
     "marked": "^12.0.1"
   },
   "devDependencies": {
-    "@astrojs/github": "^1.0.0",
     "gh-pages": "^5.0.0"
   }
 }

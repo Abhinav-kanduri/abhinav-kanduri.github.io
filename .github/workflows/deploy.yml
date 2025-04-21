@@ -6,25 +6,20 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read       # for checkout
-  pages: write         # to push to gh-pages
-  id-token: write      # required by deploy-pages action
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
         with:
           node-version: '18'
-
-      - name: Build, then deploy to gh-pages
-        uses: withastro/action@v3
+      - uses: withastro/action@v3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}  # built‑in token
-          branch: gh-pages                    # target branch
-          folder: docs                        # Astro’s output dir
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: gh-pages
+          folder: docs

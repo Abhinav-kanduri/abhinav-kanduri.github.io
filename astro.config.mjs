@@ -4,7 +4,6 @@ import tailwind         from '@astrojs/tailwind';
 import mdx              from '@astrojs/mdx';
 import rehypePrettyCode from 'rehype-pretty-code';
 import remarkToc        from 'remark-toc';
-import github           from '@astrojs/github';
 
 export default defineConfig({
 //  site: 'https://genai-data-engineering.com'
@@ -21,7 +20,7 @@ export default defineConfig({
   integrations: [
     tailwind(),
     mdx(),
-    github(),           // <-- add this
+          // <-- add this
   ],
 
   markdown: {
