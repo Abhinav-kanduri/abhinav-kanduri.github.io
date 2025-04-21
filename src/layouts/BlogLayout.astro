@@ -1,0 +1,115 @@
+---
+import Layout from './Layout.astro';
+import TableOfContents from '../components/TableOfContents.astro';
+import TagList from '../components/TagList.astro';
+import CommentSection from '../components/CommentSection.astro';
+import ShareButtons from '../components/ShareButtons.astro';
+import RelatedPosts from '../components/RelatedPosts.astro';
+import Newsletter from '../components/Newsletter.astro';
+
+interface Props {
+	title: string;
+	description: string;
+	publishDate: Date;
+	updatedDate?: Date;
+	heroImage?: string;
+	tags?: string[];
+	author: {
+		name: string;
+		image: string;
+		bio: string;
+	};
+}
+
+const { 
+	title, 
+	description, 
+	publishDate, 
+	updatedDate,
+	heroImage, 
+	tags = [],
+	author
+} = Astro.props;
+
+const formattedPublishDate = new Date(publishDate).toLocaleDateString('en-US', {
+	year: 'numeric',
+	month: 'long',
+	day: 'numeric'
+});
+
+const formattedUpdatedDate = updatedDate 
+	? new Date(updatedDate).toLocaleDateString('en-US', {
+		year: 'numeric',
+		month: 'long',
+		day: 'numeric'
+	})
+	: null;
+---
+
+<Layout title={title} description={description}>
+	<article class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+		<div class="mb-8 animate-fade-in">
+			{heroImage && (
+				<img 
+					src={heroImage} 
+					alt={title}
+					class="w-full h-64 sm:h-80 md:h-96 object-cover rounded-xl mb-8"
+				/>
+			)}
+			
+			<div class="flex flex-wrap gap-2 mb-4">
+				<TagList tags={tags} />
+			</div>
+			
+			<h1 class="text-4xl md:text-5xl font-bold mb-4">{title}</h1>
+			
+			<p class="text-lg text-gray-600 dark:text-gray-400 mb-6">{description}</p>
+			
+			<div class="flex items-center mb-8">
+				<img 
+					src={author.image} 
+					alt={author.name}
+					class="w-12 h-12 rounded-full mr-4"
+				/>
+				<div>
+					<div class="font-medium">{author.name}</div>
+					<div class="text-sm text-gray-600 dark:text-gray-400">
+						Published on {formattedPublishDate}
+						{formattedUpdatedDate && ` • Updated on ${formattedUpdatedDate}`}
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="lg:grid lg:grid-cols-[1fr_250px] lg:gap-8">
+			<div>
+				<div class="prose prose-lg dark:prose-dark max-w-none mb-12 animate-slide-up">
+					<slot />
+				</div>
+				
+				<div class="border-t border-gray-200 dark:border-gray-800 pt-8 mb-12">
+					<ShareButtons title={title} />
+				</div>
+				
+				<div class="mb-12">
+					<CommentSection />
+				</div>
+			</div>
+			
+			<aside class="space-y-8 lg:sticky lg:top-24 lg:self-start">
+				<div class="bg-gray-50 dark:bg-primary-800 rounded-xl p-6">
+					<TableOfContents />
+				</div>
+				
+				<div class="bg-gray-50 dark:bg-primary-800 rounded-xl p-6">
+					<h3 class="text-xl font-semibold mb-4">Related Posts</h3>
+					<RelatedPosts currentTags={tags} />
+				</div>
+				
+				<div class="bg-gray-50 dark:bg-primary-800 rounded-xl p-6">
+					<Newsletter />
+				</div>
+			</aside>
+		</div>
+	</article>
+</Layout>

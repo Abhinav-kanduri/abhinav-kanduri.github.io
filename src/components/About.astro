@@ -1,0 +1,35 @@
+---
+import Newsletter from '../components/Newsletter.astro';
+---
+
+<section class="bg-gray-50 dark:bg-primary-900 py-12">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h1 class="text-3xl font-bold mb-6">About GenAI & Data Engineering Insights</h1>
+    
+    <div class="prose prose-lg dark:prose-dark max-w-none">
+      <p>
+        Hi, I'm Abhinav, a senior data scientist and generative AI specialist. I created this blog to bridge the gap between cutting-edge AI and robust data engineering practices.
+      </p>
+      <p>
+        My mission is to provide clear, code-first tutorials and deep-dive case studies that help you build practical, scalable solutions.
+      </p>
+      <p>
+        Here, you'll learn how to:
+      </p>
+      <ul>
+        <li>Build production-ready RAG systems</li>
+        <li>Design scalable data pipelines</li>
+        <li>Implement MLOps best practices</li>
+        <li>Leverage cloud services for AI and data</li>
+      </ul>
+    </div>
+    
+    <div class="mt-8">
+      <h2 class="text-2xl font-bold mb-4">Stay Up-to-Date</h2>
+      <p class="text-lg">
+        Enter your email below to join our community and receive a monthly newsletter packed with tutorials, case studies, and best-practice tips.
+      </p>
+      <Newsletter />
+    </div>
+  </div>
+</section>

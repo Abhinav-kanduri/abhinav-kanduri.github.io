@@ -1,0 +1,109 @@
+<div class="table-of-contents">
+  <h3 class="text-lg font-semibold mb-3">Table of Contents</h3>
+  <nav class="toc-nav">
+    <ul class="space-y-2 text-sm">
+      <!-- This will be populated via JS -->
+      <li class="text-gray-500 dark:text-gray-400">Loading...</li>
+    </ul>
+  </nav>
+</div>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const article = document.querySelector('article');
+    const tocNav = document.querySelector('.toc-nav ul');
+    
+    if (!article || !tocNav) return;
+    
+    // Find all headings in the article
+    const headings = article.querySelectorAll('h2, h3, h4');
+    
+    if (headings.length === 0) {
+      tocNav.innerHTML = '<li class="text-gray-500 dark:text-gray-400">No sections found</li>';
+      return;
+    }
+    
+    // Clear loading message
+    tocNav.innerHTML = '';
+    
+    // Add IDs to headings if they don't have them
+    headings.forEach((heading, index) => {
+      if (!heading.id) {
+        heading.id = `heading-${index}`;
+      }
+    });
+    
+    // Create TOC items
+    headings.forEach((heading) => {
+      const level = parseInt(heading.tagName.charAt(1)) - 2; // h2 = 0, h3 = 1, etc.
+      const indent = level * 12; // 12px per level
+      
+      const listItem = document.createElement('li');
+      const link = document.createElement('a');
+      
+      link.href = `#${heading.id}`;
+      link.textContent = heading.textContent;
+      link.classList.add('hover:text-accent-600', 'dark:hover:text-accent-400', 'transition-colors');
+      
+      // Add appropriate indentation based on heading level
+      if (level > 0) {
+        link.style.paddingLeft = `${indent}px`;
+      }
+      
+      // Add active state handler
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        
+        // Remove active state from all links
+        document.querySelectorAll('.toc-nav a').forEach((el) => {
+          el.classList.remove('text-accent-600', 'dark:text-accent-400', 'font-medium');
+        });
+        
+        // Add active state to clicked link
+        link.classList.add('text-accent-600', 'dark:text-accent-400', 'font-medium');
+        
+        // Scroll to heading
+        const targetHeading = document.querySelector(`#${heading.id}`);
+        if (targetHeading) {
+          targetHeading.scrollIntoView({ behavior: 'smooth' });
+          
+          // Update URL hash without jumping
+          history.pushState(null, null, `#${heading.id}`);
+        }
+      });
+      
+      listItem.appendChild(link);
+      tocNav.appendChild(listItem);
+    });
+    
+    // Highlight active section on scroll
+    const observerOptions = {
+      rootMargin: '-100px 0px -66%',
+      threshold: 0
+    };
+    
+    const headingElements = Array.from(headings);
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        const id = entry.target.getAttribute('id');
+        const tocLink = document.querySelector(`.toc-nav a[href="#${id}"]`);
+        
+        if (entry.isIntersecting && tocLink) {
+          // Remove active state from all links
+          document.querySelectorAll('.toc-nav a').forEach((el) => {
+            el.classList.remove('text-accent-600', 'dark:text-accent-400', 'font-medium');
+          });
+          
+          // Add active state to current link
+          tocLink.classList.add('text-accent-600', 'dark:text-accent-400', 'font-medium');
+        }
+      });
+    }, observerOptions);
+    
+    // Observe all headings
+    headingElements.forEach((heading) => {
+      observer.observe(heading);
+    });
+  });
+</script>

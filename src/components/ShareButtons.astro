@@ -1,0 +1,101 @@
+---
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+
+const shareLinks = [
+  {
+    name: 'Twitter',
+    icon: 'twitter',
+    color: 'bg-[#1DA1F2] hover:bg-[#0d8bd9]'
+  },
+  {
+    name: 'LinkedIn',
+    icon: 'linkedin',
+    color: 'bg-[#0A66C2] hover:bg-[#084f98]'
+  },
+  {
+    name: 'Facebook',
+    icon: 'facebook',
+    color: 'bg-[#1877F2] hover:bg-[#0d6ae4]'
+  },
+  {
+    name: 'Copy Link',
+    icon: 'link',
+    color: 'bg-gray-700 hover:bg-gray-800'
+  }
+];
+---
+
+<div class="share-buttons space-y-4">
+  <h4 class="text-lg font-medium">Share this article</h4>
+  
+  <div class="flex flex-wrap gap-2">
+    {shareLinks.map(({ name, icon, color }) => (
+      <button 
+        class={`share-button ${color} text-white rounded-md p-2 flex items-center justify-center transition-colors`}
+        data-platform={name.toLowerCase()}
+        aria-label={`Share on ${name}`}
+      >
+        {icon === 'twitter' && (
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M19.633 7.997c.013.175.013.349.013.523 0 5.325-4.053 11.461-11.46 11.461-2.282 0-4.402-.661-6.186-1.809.324.037.636.05.973.05a8.07 8.07 0 0 0 5.001-1.721 4.036 4.036 0 0 1-3.767-2.793c.249.037.499.062.761.062.361 0 .724-.05 1.061-.137a4.027 4.027 0 0 1-3.23-3.953v-.05c.537.299 1.16.486 1.82.511a4.022 4.022 0 0 1-1.796-3.354c0-.748.199-1.434.548-2.032a11.457 11.457 0 0 0 8.306 4.215c-.062-.3-.1-.599-.1-.899a4.026 4.026 0 0 1 4.028-4.028c1.16 0 2.207.486 2.943 1.272a7.957 7.957 0 0 0 2.556-.973 4.02 4.02 0 0 1-1.771 2.22 8.073 8.073 0 0 0 2.319-.624 8.645 8.645 0 0 1-2.019 2.083z"></path>
+          </svg>
+        )}
+        {icon === 'linkedin' && (
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M20 3H4a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1zM8.339 18.337H5.667v-8.59h2.672v8.59zM7.003 8.574a1.548 1.548 0 1 1 0-3.096 1.548 1.548 0 0 1 0 3.096zm11.335 9.763h-2.669V14.16c0-.996-.018-2.277-1.388-2.277-1.39 0-1.601 1.086-1.601 2.207v4.248h-2.667v-8.59h2.56v1.174h.037c.355-.675 1.227-1.387 2.524-1.387 2.704 0 3.203 1.778 3.203 4.092v4.71z"></path>
+          </svg>
+        )}
+        {icon === 'facebook' && (
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M13.397 20.997v-8.196h2.765l.411-3.209h-3.176V7.548c0-.926.258-1.56 1.587-1.56h1.684V3.127A22.336 22.336 0 0 0 14.201 3c-2.444 0-4.122 1.492-4.122 4.231v2.355H7.332v3.209h2.753v8.202h3.312z"></path>
+          </svg>
+        )}
+        {icon === 'link' && (
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+          </svg>
+        )}
+      </button>
+    ))}
+  </div>
+</div>
+
+<script define:vars={{ title }}>
+  document.addEventListener('astro:page-load', () => {
+    const shareButtons = document.querySelectorAll('.share-button');
+    const pageUrl = encodeURIComponent(window.location.href);
+    const pageTitle = encodeURIComponent(title);
+    
+    shareButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const platform = button.getAttribute('data-platform');
+        
+        if (platform === 'twitter') {
+          window.open(`https://twitter.com/intent/tweet?url=${pageUrl}&text=${pageTitle}`, '_blank');
+        } else if (platform === 'linkedin') {
+          window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${pageUrl}`, '_blank');
+        } else if (platform === 'facebook') {
+          window.open(`https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`, '_blank');
+        } else if (platform === 'copy link') {
+          navigator.clipboard.writeText(window.location.href).then(() => {
+            // Change button text to indicate successful copy
+            const originalHTML = button.innerHTML;
+            button.innerHTML = `
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+            `;
+            
+            setTimeout(() => {
+              button.innerHTML = originalHTML;
+            }, 2000);
+          });
+        }
+      });
+    });
+  });
+</script>

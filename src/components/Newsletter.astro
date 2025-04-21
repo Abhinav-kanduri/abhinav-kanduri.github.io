@@ -1,0 +1,74 @@
+<div class="rounded-lg bg-primary-50 dark:bg-primary-800 p-6 md:p-8">
+  <h3 class="text-xl font-bold mb-2">Join our Newsletter</h3>
+  <p class="text-gray-600 dark:text-gray-300 mb-4">Get monthly deep dives on GenAI and Data Engineering straight to your inbox.</p>
+  
+  <form id="newsletter-form" class="space-y-4">
+    <div>
+      <label for="email" class="sr-only">Email</label>
+      <input 
+        type="email" 
+        id="email" 
+        name="email" 
+        placeholder="Your email address" 
+        required
+        class="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-primary-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:border-transparent"
+      />
+    </div>
+    
+    <div class="flex flex-wrap gap-2">
+      <label class="flex items-center space-x-2 text-sm">
+        <input type="checkbox" name="interests" value="genai" class="text-accent-600 rounded focus:ring-accent-500" checked />
+        <span>Generative AI</span>
+      </label>
+      
+      <label class="flex items-center space-x-2 text-sm">
+        <input type="checkbox" name="interests" value="data" class="text-accent-600 rounded focus:ring-accent-500" checked />
+        <span>Data Engineering</span>
+      </label>
+      
+      <label class="flex items-center space-x-2 text-sm">
+        <input type="checkbox" name="interests" value="mlops" class="text-accent-600 rounded focus:ring-accent-500" />
+        <span>MLOps</span>
+      </label>
+    </div>
+    
+    <button 
+      type="submit" 
+      class="w-full btn btn-primary py-2"
+    >
+      Subscribe
+    </button>
+    
+    <p class="text-xs text-gray-500 dark:text-gray-400">
+      We respect your privacy. Unsubscribe at any time.
+    </p>
+  </form>
+  
+  <div id="newsletter-success" class="hidden">
+    <div class="bg-success-50 dark:bg-success-900/20 border border-success-500 rounded-md p-4 text-success-900 dark:text-success-500">
+      <p class="flex items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        <span>Success! Check your email to confirm your subscription.</span>
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const form = document.getElementById('newsletter-form');
+    const successMessage = document.getElementById('newsletter-success');
+    
+    form?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      // Simulate form submission (would connect to an actual service in production)
+      if (form && successMessage) {
+        form.classList.add('hidden');
+        successMessage.classList.remove('hidden');
+      }
+    });
+  });
+</script>

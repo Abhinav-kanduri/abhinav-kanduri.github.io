@@ -1,0 +1,117 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-white dark:bg-primary-900 text-primary-900 dark:text-white font-sans;
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-sans font-semibold tracking-tight;
+  }
+
+  h1 {
+    @apply text-4xl md:text-5xl lg:text-6xl leading-tight;
+  }
+
+  h2 {
+    @apply text-3xl md:text-4xl leading-snug mt-12 mb-6;
+  }
+
+  h3 {
+    @apply text-2xl md:text-3xl leading-snug mt-8 mb-4;
+  }
+
+  p {
+    @apply my-4 leading-relaxed;
+  }
+
+  a {
+    @apply text-accent-600 hover:text-accent-700 dark:text-accent-400 dark:hover:text-accent-300 transition-colors duration-200;
+  }
+
+  pre {
+    @apply my-6 p-4 rounded-lg overflow-x-auto text-sm;
+  }
+
+  code {
+    @apply font-mono text-sm bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded;
+  }
+
+  pre code {
+    @apply bg-transparent p-0;
+  }
+
+  blockquote {
+    @apply border-l-4 border-accent-500 pl-4 italic my-6;
+  }
+
+  ul, ol {
+    @apply my-4 pl-6;
+  }
+
+  ul {
+    @apply list-disc;
+  }
+
+  ol {
+    @apply list-decimal;
+  }
+
+  li {
+    @apply my-1;
+  }
+
+  img {
+    @apply max-w-full h-auto;
+  }
+
+  /* Button styles */
+  .btn {
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-md font-medium transition-colors duration-200;
+  }
+
+  .btn-primary {
+    @apply bg-accent-600 hover:bg-accent-700 text-white;
+  }
+
+  .btn-secondary {
+    @apply bg-primary-100 hover:bg-primary-200 text-primary-900 dark:bg-primary-800 dark:hover:bg-primary-700 dark:text-white;
+  }
+
+  .btn-outline {
+    @apply border border-accent-600 hover:bg-accent-600 text-accent-600 hover:text-white dark:border-accent-400 dark:text-accent-400 dark:hover:bg-accent-700 dark:hover:text-white;
+  }
+
+  /* Card styles */
+  .card {
+    @apply bg-white dark:bg-primary-800 rounded-xl shadow-md overflow-hidden transition-transform duration-200 hover:shadow-lg;
+  }
+
+  /* Animation utilities */
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.5s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+}

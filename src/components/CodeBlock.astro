@@ -1,0 +1,124 @@
+---
+interface Props {
+  language: string;
+  title?: string;
+  showLineNumbers?: boolean;
+}
+
+const { 
+  language, 
+  title, 
+  showLineNumbers = true 
+} = Astro.props;
+
+const languageMap = {
+  py: 'python',
+  js: 'javascript',
+  ts: 'typescript',
+  jsx: 'jsx',
+  tsx: 'tsx',
+  sql: 'sql',
+  bash: 'bash',
+  sh: 'bash',
+  tf: 'hcl',
+  yaml: 'yaml',
+  yml: 'yaml',
+  json: 'json',
+  md: 'markdown',
+};
+
+const displayLanguage = languageMap[language] || language;
+---
+
+<div class="code-block relative group my-6 bg-gray-800 dark:bg-gray-900 rounded-lg overflow-hidden">
+  {title && (
+    <div class="flex items-center justify-between px-4 py-2 bg-gray-700 dark:bg-gray-800 text-white text-sm">
+      <div class="flex items-center">
+        <span class="mr-2">{title}</span>
+        {displayLanguage && (
+          <span class="px-2 py-0.5 text-xs bg-gray-600 dark:bg-gray-700 rounded-md">{displayLanguage}</span>
+        )}
+      </div>
+      <button
+        class="copy-button opacity-0 group-hover:opacity-100 transition-opacity duration-200 px-2 py-1 text-xs rounded hover:bg-gray-600"
+        aria-label="Copy code"
+      >
+        Copy
+      </button>
+    </div>
+  )}
+
+  {!title && (
+    <div class="absolute right-2 top-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+      <button
+        class="copy-button px-2 py-1 text-xs bg-gray-700 hover:bg-gray-600 rounded-md text-white"
+        aria-label="Copy code"
+      >
+        Copy
+      </button>
+    </div>
+  )}
+
+  <pre 
+    class={`p-4 overflow-x-auto ${showLineNumbers ? 'line-numbers' : ''}`}
+    data-language={language}
+  ><slot /></pre>
+</div>
+
+<script>
+  // Initialize copy button functionality
+  document.addEventListener('astro:page-load', () => {
+    const copyButtons = document.querySelectorAll('.copy-button');
+    
+    copyButtons.forEach(button => {
+      button.addEventListener('click', async () => {
+        const codeBlock = button.closest('.code-block');
+        const codeElement = codeBlock?.querySelector('pre');
+        
+        if (codeElement) {
+          try {
+            const code = codeElement.textContent || '';
+            await navigator.clipboard.writeText(code);
+            
+            // Change button text to indicate successful copy
+            const originalText = button.textContent;
+            button.textContent = 'Copied!';
+            button.classList.add('bg-accent-600');
+            
+            // Reset button text after 2 seconds
+            setTimeout(() => {
+              button.textContent = originalText;
+              button.classList.remove('bg-accent-600');
+            }, 2000);
+          } catch (err) {
+            console.error('Failed to copy code:', err);
+            button.textContent = 'Failed';
+            
+            setTimeout(() => {
+              button.textContent = 'Copy';
+            }, 2000);
+          }
+        }
+      });
+    });
+  });
+</script>
+
+<style>
+  .line-numbers {
+    counter-reset: line;
+  }
+  
+  .line-numbers code {
+    counter-increment: line;
+  }
+  
+  .line-numbers code::before {
+    content: counter(line);
+    display: inline-block;
+    width: 1.5rem;
+    margin-right: 1rem;
+    text-align: right;
+    color: #6b7280;
+  }
+</style>

@@ -1,0 +1,140 @@
+<div class="relative">
+  <button 
+    id="search-button"
+    class="flex items-center px-3 py-1.5 text-sm rounded-md bg-gray-100 dark:bg-primary-800 hover:bg-gray-200 dark:hover:bg-primary-700 transition-colors duration-200"
+    aria-label="Search"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+    </svg>
+    <span class="hidden sm:inline">Search...</span>
+    <span class="hidden sm:inline ml-2 text-xs text-gray-500 dark:text-gray-400">⌘K</span>
+  </button>
+  
+  <!-- Search modal - hidden by default -->
+  <div 
+    id="search-modal" 
+    class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-start justify-center pt-20 px-4"
+  >
+    <div class="bg-white dark:bg-primary-800 rounded-xl shadow-2xl max-w-2xl w-full max-h-[70vh] overflow-hidden flex flex-col animate-fade-in">
+      <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+        <div class="relative">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 absolute left-3 top-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <input 
+            type="search" 
+            id="search-input"
+            placeholder="Search for articles, topics, code examples..."
+            class="w-full py-2 pl-10 pr-4 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-primary-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-accent-500"
+          />
+        </div>
+      </div>
+      
+      <div class="overflow-y-auto p-2 flex-grow">
+        <div id="search-results" class="divide-y divide-gray-200 dark:divide-gray-700">
+          <!-- Results will be populated here -->
+          <div class="p-4 text-center text-gray-500 dark:text-gray-400">
+            Type to search...
+          </div>
+        </div>
+      </div>
+      
+      <div class="p-2 bg-gray-50 dark:bg-primary-900 border-t border-gray-200 dark:border-gray-700 text-xs text-gray-500 dark:text-gray-400 flex justify-between items-center">
+        <div>
+          <span class="inline-flex items-center mr-3">
+            <kbd class="px-2 py-1 bg-white dark:bg-primary-700 rounded text-xs mr-1">↑</kbd>
+            <kbd class="px-2 py-1 bg-white dark:bg-primary-700 rounded text-xs mr-1">↓</kbd>
+            to navigate
+          </span>
+          <span class="inline-flex items-center">
+            <kbd class="px-2 py-1 bg-white dark:bg-primary-700 rounded text-xs mr-1">Enter</kbd>
+            to select
+          </span>
+        </div>
+        <button 
+          id="search-close" 
+          class="text-sm hover:text-gray-900 dark:hover:text-white"
+        >
+          ESC to close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Search modal functionality
+  const searchButton = document.getElementById('search-button');
+  const searchModal = document.getElementById('search-modal');
+  const searchInput = document.getElementById('search-input');
+  const searchClose = document.getElementById('search-close');
+
+  function openSearchModal() {
+    if (searchModal) {
+      searchModal.classList.remove('hidden');
+      searchInput?.focus();
+    }
+  }
+
+  function closeSearchModal() {
+    if (searchModal) {
+      searchModal.classList.add('hidden');
+    }
+  }
+
+  searchButton?.addEventListener('click', openSearchModal);
+  searchClose?.addEventListener('click', closeSearchModal);
+
+  // Close on escape key
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeSearchModal();
+    }
+    // Open on Cmd/Ctrl + K
+    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      e.preventDefault();
+      openSearchModal();
+    }
+  });
+
+  // Close when clicking outside
+  searchModal?.addEventListener('click', (e) => {
+    if (e.target === searchModal) {
+      closeSearchModal();
+    }
+  });
+
+  // Demo search functionality (would be replaced with actual search in production)
+  searchInput?.addEventListener('input', (e) => {
+    const searchResultsDiv = document.getElementById('search-results');
+    const query = e.target.value.trim();
+    
+    if (!searchResultsDiv) return;
+    
+    if (query === '') {
+      searchResultsDiv.innerHTML = `
+        <div class="p-4 text-center text-gray-500 dark:text-gray-400">
+          Type to search...
+        </div>
+      `;
+      return;
+    }
+
+    // Demo results - in a real implementation this would fetch actual results
+    searchResultsDiv.innerHTML = `
+      <a href="/blog/example-1" class="block p-3 hover:bg-gray-100 dark:hover:bg-primary-700 rounded-lg">
+        <div class="font-medium text-accent-600 dark:text-accent-400">Building a RAG System with LangChain</div>
+        <div class="text-sm text-gray-600 dark:text-gray-400">Tutorial showing how to build a retrieval augmented generation system...</div>
+      </a>
+      <a href="/blog/example-2" class="block p-3 hover:bg-gray-100 dark:hover:bg-primary-700 rounded-lg">
+        <div class="font-medium text-accent-600 dark:text-accent-400">Optimizing Embeddings for Vector Search</div>
+        <div class="text-sm text-gray-600 dark:text-gray-400">Techniques for creating and using efficient vector embeddings...</div>
+      </a>
+      <a href="/blog/example-3" class="block p-3 hover:bg-gray-100 dark:hover:bg-primary-700 rounded-lg">
+        <div class="font-medium text-accent-600 dark:text-accent-400">Streaming Data Pipelines with Apache Kafka</div>
+        <div class="text-sm text-gray-600 dark:text-gray-400">How to build robust data pipelines for real-time analytics...</div>
+      </a>
+    `;
+  });
+</script>
