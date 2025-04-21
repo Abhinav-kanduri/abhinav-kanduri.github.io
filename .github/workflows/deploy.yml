@@ -32,9 +32,3 @@ jobs:
       # 4. Deploy the previously-uploaded artifact to gh-pages
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
-        with:
-          publish_dir: dist # the directory to deploy
-          github_token: ${{ secrets.GITHUB_TOKEN }} # auto-generated token for this repo
-          publish_branch: gh-pages # the branch to deploy to (default: gh-pages)
-          publish_dir: dist # the directory to deploy (default: dist)
-          publish_url: https://abhinav-kanduri.github.io/ # the URL to publish to (default: https://<USERNAME>.github.io/<REPO_NAME>)
