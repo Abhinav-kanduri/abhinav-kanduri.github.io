@@ -1,4 +1,3 @@
-# .github/workflows/deploy.yml
 name: 🚀 Deploy to GitHub Pages
 
 on:
@@ -6,27 +5,26 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
-# Grant just enough permissions for checkout + pages
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: read       # for checkout
+  pages: write         # to push to gh-pages
+  id-token: write      # required by deploy-pages action
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
-      - name: Install, build & deploy
+      - name: Build, then deploy to gh-pages
         uses: withastro/action@v3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: gh-pages       # target branch for Pages
-          folder: docs           # output dir from `npm run build`
+          token: ${{ secrets.GITHUB_TOKEN }}  # built‑in token
+          branch: gh-pages                    # target branch
+          folder: docs                        # Astro’s output dir
