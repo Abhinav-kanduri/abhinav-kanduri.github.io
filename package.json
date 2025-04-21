@@ -3,11 +3,14 @@
   "type": "module",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://abhinav-kanduri.github.io/genai-data-engineering-blog",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d docs"
   },
   "dependencies": {
     "astro": "^5.2.5",
@@ -20,5 +23,9 @@
     "remark-toc": "^9.0.0",
     "shiki": "^1.1.7",
     "marked": "^12.0.1"
+  },
+  "devDependencies": {
+    "@astrojs/github": "^1.0.0",
+    "gh-pages": "^5.0.0"
   }
 }
