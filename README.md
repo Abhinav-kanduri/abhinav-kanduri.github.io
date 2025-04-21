@@ -1,48 +1,127 @@
-# Astro Starter Kit: Basics
+# 🚀 Generative AI Blog by Abhinav
 
-```sh
-npm create astro@latest -- --template basics
-```
+Welcome to **Abhinav's Generative AI Blog**, your go-to destination to start building, writing, and exploring the exciting world of **LLMs, RAG systems, embeddings, fine-tuning**, and more.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/basics)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/basics)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/basics/devcontainer.json)
+Whether you're a beginner or an experienced ML engineer, this blog brings you step-by-step guides, use cases, and career insights from the AI frontier.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+![Generative AI Banner](https://github.com/withastro/astro/assets/2244813/a0a5533c-a856-4198-8470-2d67b1d7c554)
 
-![just-the-basics](https://github.com/withastro/astro/assets/2244813/a0a5533c-a856-4198-8470-2d67b1d7c554)
+---
 
-## 🚀 Project Structure
+## 📌 About This Repo
 
-Inside of your Astro project, you'll see the following folders and files:
+This is more than a blog — it's a **knowledge hub** built using Astro and Markdown. Here, I share everything I learn while experimenting with:
 
-```text
+- 🔍 Large Language Models (LLMs)
+- 🔗 RAG Architectures & Vector Databases
+- 🧠 Fine-Tuning Techniques (LoRA, QLoRA)
+- 💬 Prompt Engineering Strategies
+- ☁️ Firebase + GCP LLM Integration
+- 📊 Resume/Career AI Tools for Job Seekers
+- 🛠 Real-World AI Use Cases
+
+---
+
+## 🧠 Tech Stack
+
+| Layer        | Tech                          |
+| ------------ | ----------------------------- |
+| Frontend     | Astro + TailwindCSS           |
+| Content      | Markdown (.md)                |
+| Auth & DB    | Firebase Auth + Firestore     |
+| Deployment   | Firebase Hosting / GitHub Pages |
+| LLM          | Vertex AI + Gemini 1.0 Pro    |
+| Bonus        | LangChain, Redis, PGVector    |
+
+---
+
+## 📁 Project Structure
+
+```bash
 /
 ├── public/
 │   └── favicon.svg
 ├── src/
 │   ├── layouts/
-│   │   └── Layout.astro
-│   └── pages/
-│       └── index.astro
+│   │   └── BlogLayout.astro
+│   ├── pages/
+│   │   ├── index.astro
+│   │   ├── about.astro
+│   │   └── blog/
+│   │       ├── llm-intro.md
+│   │       ├── rag-architecture.md
+│   │       ├── fine-tune-lora.md
+│   │       └── firebase-llm.md
 └── package.json
-```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
 
-## 🧞 Commands
 
-All commands are run from the root of the project, from a terminal:
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+🧞 Available Commands
 
-## 👀 Want to learn more?
+Command	Action
+npm install	Install dependencies
+npm run dev	Start dev server at localhost:4321
+npm run build	Build the site to ./dist
+npm run preview	Preview the production build
+🚀 Deployment
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+
+✅ Firebase Hosting
+bash
+Copy
+Edit
+npm install -g firebase-tools
+firebase login
+firebase init
+npm run build
+firebase deploy
+
+
+✅ GitHub Pages
+Update your astro.config.mjs:
+
+js
+Copy
+Edit
+import { defineConfig } from 'astro/config';
+import github from '@astrojs/github';
+
+export default defineConfig({
+  output: 'static',
+  base: '/your-repo-name/',
+  integrations: [github()],
+});
+🔗 Resources
+📘 Astro Documentation
+
+🔥 Firebase Hosting Docs
+
+☁️ Vertex AI - Gemini API
+
+🔗 LangChain Documentation
+
+🙋‍♂️ About Abhinav
+I'm Abhinav, a passionate Generative AI explorer building solutions with LLMs, vector search, RAG pipelines, and cloud-native tools like Firebase + GCP. This blog is where I document my journey, learn in public, and help others grow.
+
+🌐 LinkedIn :  https://www.linkedin.com/in/abhinav-kanduri-a943b9353/
+
+✉️ abhinav.kanduri01@gmail.com
+
+🧠 License
+MIT License – use it, improve it, share it.
+
+Start your journey in Generative AI with me. Let’s build the future together.
+
+python
+Copy
+Edit
+
+---
+
+✅ Let me know if you'd like:
+- An `index.astro` homepage for this blog
+- A starter blog post like `firebase-llm.md`
+- Deployment support or custom domain setup
+
+I'm here to help you launch this smoothly 🚀
