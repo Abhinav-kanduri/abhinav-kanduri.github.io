@@ -1,7 +1,6 @@
 // astro.config.mjs
 // @ts-check
 import { defineConfig } from 'astro/config';
-import remark from '@astrojs/markdown-remark';
 import tailwind from '@astrojs/tailwind';
 import mdx from '@astrojs/mdx';
 import rehypePrettyCode from 'rehype-pretty-code';
@@ -17,7 +16,6 @@ export default defineConfig({
   integrations: [
     tailwind(),
     mdx(),
-    remark(),
     // github(),  <-- remove this line if present
   ],
 
