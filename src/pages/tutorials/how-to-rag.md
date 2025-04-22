@@ -1,5 +1,5 @@
 ---
-layout: "../../layouts/ArticleLayout.astro"
+layout: "../../layouts/Layout.astro"
 title: "How to Build a RAG System"
 description: "Step‑by‑step guide…"
 pubDate: "2024-03-15"
