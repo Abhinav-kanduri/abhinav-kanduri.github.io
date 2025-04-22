@@ -1,3 +1,18 @@
+---
+title: "How to Build a RAG System"
+description: "Step‑by‑step guide…"
+pubDate: "2024-03-15"
+heroImage: "https://images.unsplash.com/…"
+tags:
+  - generative-ai
+  - tutorials
+author:
+  name: "Abhinav Kanduri"                   # ← update this
+  image: "https://image.lexica.art/full_jpg/dc0d3ad4-7d26-49ee-a94b-18d831041625"  # ← or this
+---
+
+# How to Build a RAG System
+
 ## Description & Problem Statement
 
 **Description**  
