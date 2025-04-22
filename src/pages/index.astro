@@ -4,26 +4,26 @@ import BlogCard   from '../components/BlogCard.astro';
 import Newsletter from '../components/Newsletter.astro';
 import TagList    from '../components/TagList.astro';
 
-// 1. Glob all markdown posts from each category
+// 1. Glob all Markdown posts from each category folder
 const tutorials     = import.meta.glob('./tutorials/*.md',    { eager: true });
 const architectures = import.meta.glob('./architecture/*.md', { eager: true });
 const tools         = import.meta.glob('./tools/*.md',        { eager: true });
 const cases         = import.meta.glob('./case-studies/*.md', { eager: true });
 
-// 2. Flatten into the same `{ slug, data, category }` shape that BlogCard expects
+// 2. Normalize into { slug, data, category } for BlogCard
 function flattenPosts(mods, category) {
   return Object.entries(mods).map(([path, mod]) => {
     const slug = path.split('/').pop().replace(/\.md$/, '');
-    const { title, description, pubDate, heroImage, tags, author } = mod.frontmatter;
+    const fm = mod.frontmatter;
     return {
       slug,
       data: {
-        title,
-        description,
-        publishDate: new Date(pubDate),
-        heroImage,
-        tags,
-        author,  // { name: string, image: string }
+        title: fm.title,
+        description: fm.description,
+        publishDate: new Date(fm.pubDate),
+        heroImage: fm.heroImage,
+        tags: fm.tags,
+        author: fm.author
       },
       category
     };
@@ -37,117 +37,136 @@ let allPosts = [
   ...flattenPosts(cases,        'case-studies'),
 ];
 
-// 3. Sort by publishDate descending
+// 3. Sort newest first
 allPosts.sort((a, b) => b.data.publishDate - a.data.publishDate);
 
-// 4. Pick out Featured (first 2) and Recent (next 4)
+// 4. Slice out featured (first 2) and recent (next 4)
 const featuredPosts = allPosts.slice(0, 2);
 const recentPosts   = allPosts.slice(2, 6);
 
-// 5. Build unique list of tags
-const popularTags = Array.from(new Set(allPosts.flatMap(post => post.data.tags)));
+// 5. Unique, de‑duplicated tags
+const popularTags = Array.from(new Set(allPosts.flatMap(p => p.data.tags)));
 ---
 
 <Layout title="Home">
   <!-- Hero Section -->
-  <section class="bg-gradient-to-br from-primary-900 to-primary-800 text-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
-      <div class="max-w-4xl">
-        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 animate-fade-in">
-          Bridging cutting‑edge Generative AI with rock‑solid Data Engineering
-        </h1>
-        <p class="text-xl lg:text-2xl mb-8 text-gray-200 animate-slide-up">
-          Clear, code-first tutorials and deep-dive case studies at the intersection of AI and data infrastructure.
-        </p>
-        <div class="flex flex-wrap gap-4 animate-slide-up">
-          <a href="/tutorials" class="btn btn-primary text-base px-6 py-3">
-            Browse Tutorials
-          </a>
-          <a href="/subscribe" class="btn btn-outline bg-transparent border-white text-white hover:bg-white hover:text-primary-900 text-base px-6 py-3">
-            Subscribe
-          </a>
-        </div>
+  <section class="bg-gradient-to-br from-primary-900 to-primary-800 text-white py-16 sm:py-24">
+    <div class="max-w-4xl mx-auto text-center px-4">
+      <h1 class="text-5xl font-bold mb-4">
+        Bridging cutting‑edge Generative AI with rock‑solid Data Engineering
+      </h1>
+      <p class="text-xl mb-8">
+        Clear, code-first tutorials and deep‑dive case studies at the intersection of AI and data infrastructure.
+      </p>
+      <div class="flex flex-wrap justify-center gap-4">
+        <a href="/tutorials" class="btn btn-primary px-6 py-3">Browse Tutorials</a>
+        <a href="/subscribe" class="btn btn-outline px-6 py-3">Subscribe</a>
       </div>
     </div>
   </section>
 
   <!-- Featured Insights -->
-  <section class="bg-gray-50 dark:bg-primary-900 py-16">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <section class="py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4">
       <h2 class="text-3xl font-bold mb-8">Featured Insights</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div class="grid md:grid-cols-2 gap-8">
         {featuredPosts.map(post => (
-          <BlogCard post={post} featured={true} />
+          <BlogCard post={post} featured />
         ))}
       </div>
     </div>
   </section>
-  
-  <!-- Recent Posts with Sidebar -->
+
+  <!-- Latest Articles + Sidebar -->
   <section class="py-16">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto px-4">
       <h2 class="text-3xl font-bold mb-8">Latest Articles</h2>
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <!-- Main Content -->
-        <div class="lg:col-span-2">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {recentPosts.map(post => (
-              <BlogCard post={post} />
-            ))}
-          </div>
-          <div class="mt-10 flex flex-wrap justify-center gap-4">
-            <a href="/tutorials"    class="btn btn-outline px-8 py-3">Browse Tutorials</a>
-            <a href="/architecture" class="btn btn-outline px-8 py-3">Browse Architecture</a>
-            <a href="/tools"        class="btn btn-outline px-8 py-3">Browse Tools</a>
-            <a href="/case-studies" class="btn btn-outline px-8 py-3">Browse Case Studies</a>
+      <div class="grid lg:grid-cols-3 gap-8">
+        <!-- Main content -->
+        <div class="lg:col-span-2 grid md:grid-cols-2 gap-8">
+          {recentPosts.map(post => (
+            <BlogCard post={post} />
+          ))}
+          <div class="lg:col-span-2 mt-8 flex flex-wrap justify-center gap-4">
+            <a href="/tutorials"    class="btn btn-outline px-8 py-3">Tutorials</a>
+            <a href="/architecture" class="btn btn-outline px-8 py-3">Architecture</a>
+            <a href="/tools"        class="btn btn-outline px-8 py-3">Tools</a>
+            <a href="/case-studies" class="btn btn-outline px-8 py-3">Case Studies</a>
           </div>
         </div>
-        
-        <!-- Sidebar -->
-        <div class="mt-12 lg:mt-0 space-y-8">
-          <!-- Popular Tags -->
-          <div class="bg-white dark:bg-primary-800 rounded-xl p-6 shadow-sm">
-            <h3 class="text-xl font-semibold mb-4">Popular Topics</h3>
-            <div class="flex flex-wrap gap-2">
-              <TagList tags={popularTags} showAll={true} />
-            </div>
-          </div>
-          
-          <!-- Newsletter -->
-          <Newsletter />
 
-          <!-- Resources -->
-          <div class="bg-white dark:bg-primary-800 rounded-xl p-6 shadow-sm">
+        <!-- Sidebar -->
+        <aside class="space-y-8">
+          <div class="bg-white rounded-lg p-6 shadow-sm">
+            <h3 class="text-xl font-semibold mb-4">Popular Topics</h3>
+            <TagList tags={popularTags} showAll />
+          </div>
+          <Newsletter />
+          <div class="bg-white rounded-lg p-6 shadow-sm">
             <h3 class="text-xl font-semibold mb-4">Resources</h3>
             <ul class="space-y-3">
-              <li><a href="/getting-started" class="flex items-center text-accent-600 dark:text-accent-400 hover:underline">Getting Started Guide</a></li>
-              <li><a href="/code-examples"    class="flex items-center text-accent-600 dark:text-accent-400 hover:underline">Code Examples</a></li>
-              <li><a href="/tools"            class="flex items-center text-accent-600 dark:text-accent-400 hover:underline">Tools & Libraries</a></li>
-              <li><a href="/case-studies"     class="flex items-center text-accent-600 dark:text-accent-400 hover:underline">Case Studies</a></li>
+              <li><a href="/getting-started" class="hover:underline">Getting Started Guide</a></li>
+              <li><a href="/code-examples"    class="hover:underline">Code Examples</a></li>
+              <li><a href="/tools"            class="hover:underline">Tools & Libraries</a></li>
+              <li><a href="/case-studies"     class="hover:underline">Case Studies</a></li>
             </ul>
           </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why Engineers Trust Our Content -->
+  <section class="bg-gray-50 py-16">
+    <div class="max-w-7xl mx-auto px-4 text-center">
+      <h2 class="text-3xl font-bold mb-4">Why Engineers Trust Our Content</h2>
+      <p class="text-xl text-gray-600 mb-12 max-w-3xl mx-auto">
+        From code-first tutorials to deep-dive case studies, we deliver practical insights you can apply immediately.
+      </p>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="bg-white rounded-xl p-6 shadow-sm">
+          <h3 class="text-xl font-semibold mb-2">Code‑First Approach</h3>
+          <p class="text-gray-600">
+            Every tutorial includes working code examples you can copy, adapt, and deploy in your own projects.
+          </p>
+        </div>
+        <div class="bg-white rounded-xl p-6 shadow-sm">
+          <h3 class="text-xl font-semibold mb-2">Production‑Ready Patterns</h3>
+          <p class="text-gray-600">
+            Skip the prototyping phase with battle‑tested patterns that scale in real‑world environments.
+          </p>
+        </div>
+        <div class="bg-white rounded-xl p-6 shadow-sm">
+          <h3 class="text-xl font-semibold mb-2">Cutting‑Edge Relevance</h3>
+          <p class="text-gray-600">
+            Stay ahead with content that bridges emerging AI techniques and proven data infrastructure practices.
+          </p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Features Grid (unchanged) -->
-  <section class="bg-gray-50 dark:bg-primary-900 py-16">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-12">
-        <h2 class="text-3xl font-bold mb-4">Why Engineers Trust Our Content</h2>
-        <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-          From code-first tutorials to deep-dive case studies, we deliver practical insights you can apply immediately.
-        </p>
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <!-- Feature cards... -->
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA Section (unchanged) -->
+  <!-- Call to Action -->
   <section class="py-16 bg-gradient-to-br from-accent-600 to-accent-800 text-white">
-    <!-- ... -->
+    <div class="max-w-7xl mx-auto px-4 text-center">
+      <h2 class="text-3xl font-bold mb-4">Ready to level up your AI & Data Engineering skills?</h2>
+      <p class="text-xl mb-8 max-w-3xl mx-auto">
+        Join thousands of engineers who receive our monthly deep‑dive newsletter with exclusive tutorials, case studies, and industry insights.
+      </p>
+      <form class="flex flex-col sm:flex-row justify-center gap-4 max-w-md mx-auto">
+        <input
+          type="email"
+          placeholder="Your email address"
+          required
+          class="flex-grow px-4 py-3 rounded-md bg-white/10 border border-white/20 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50"
+        />
+        <button class="btn px-6 py-3 bg-white text-accent-700 hover:bg-white/90">
+          Subscribe Now
+        </button>
+      </form>
+      <p class="text-sm mt-3 text-white/80">
+        We respect your privacy. Unsubscribe at any time.
+      </p>
+    </div>
   </section>
 </Layout>
