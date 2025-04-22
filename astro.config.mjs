@@ -5,6 +5,7 @@ import tailwind from '@astrojs/tailwind';
 import mdx from '@astrojs/mdx';
 import rehypePrettyCode from 'rehype-pretty-code';
 import remarkToc from 'remark-toc';
+import github   from '@astrojs/github';
 
 export default defineConfig({
   site: 'https://abhinav-kanduri.github.io',
@@ -16,7 +17,7 @@ export default defineConfig({
   integrations: [
     tailwind(),
     mdx(),
-    // github(),  <-- remove this line if present
+    github(), // Add the GitHub integration
   ],
 
   markdown: {
