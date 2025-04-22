@@ -1,0 +1,29 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+// 1. Glob all tutorial MDs
+const modules = import.meta.glob('./*.md', { eager: true });
+
+// 2. Build and sort list
+const tutorials = Object.entries(modules)
+  .map(([path, mod]) => {
+    const slug = path.replace(/^\.\/(.*)\.md$/, '$1');
+    const { title, description, pubDate } = mod.frontmatter;
+    return { slug, title, description, date: new Date(pubDate) };
+  })
+  .sort((a, b) => b.date - a.date);
+---
+<Layout title="Tutorials">
+  <h1 class="text-4xl font-bold mb-8">Tutorials</h1>
+  <ul class="space-y-6">
+    {tutorials.map(t => (
+      <li>
+        <a href={`/tutorials/${t.slug}`} class="text-2xl font-semibold text-accent-600 hover:underline">
+          {t.title}
+        </a>
+        {t.description && <p class="text-gray-600">{t.description}</p>}
+        {t.date && <time class="text-sm text-gray-500">{t.date.toLocaleDateString()}</time>}
+      </li>
+    ))}
+  </ul>
+</Layout>

@@ -1,0 +1,26 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const modules = import.meta.glob('./*.md', { eager: true });
+const posts = Object.entries(modules)
+  .map(([path, mod]) => {
+    const slug = path.replace(/^\.\/(.*)\.md$/, '$1');
+    const { title, description, pubDate } = mod.frontmatter;
+    return { slug, title, description, date: new Date(pubDate) };
+  })
+  .sort((a, b) => b.date - a.date);
+---
+<Layout title="Architecture">
+  <h1 class="text-4xl font-bold mb-8">Architecture</h1>
+  <ul class="space-y-6">
+    {posts.map(p => (
+      <li>
+        <a href={`/architecture/${p.slug}`} class="text-2xl font-semibold text-accent-600 hover:underline">
+          {p.title}
+        </a>
+        {p.description && <p class="text-gray-600">{p.description}</p>}
+        {p.date && <time class="text-sm text-gray-500">{p.date.toLocaleDateString()}</time>}
+      </li>
+    ))}
+  </ul>
+</Layout>

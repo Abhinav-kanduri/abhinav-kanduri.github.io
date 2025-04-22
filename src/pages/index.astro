@@ -10,18 +10,11 @@ const architectures = import.meta.glob('./architecture/*.md', { eager: true });
 const tools         = import.meta.glob('./tools/*.md',        { eager: true });
 const cases         = import.meta.glob('./case-studies/*.md', { eager: true });
 
-// 2. Merge into one list with a category tag
+// 2. Normalize into a single array with category tag
 function flatten(mods, category) {
   return Object.entries(mods).map(([path, mod]) => {
     const slug = path.replace(/^\.\/[^/]+\/(.*)\.md$/, '$1');
-    const {
-      title,
-      description,
-      pubDate,
-      heroImage,
-      tags,
-      author
-    } = mod.frontmatter;
+    const { title, description, pubDate, heroImage, tags, author } = mod.frontmatter;
     return {
       slug,
       title,
@@ -29,23 +22,23 @@ function flatten(mods, category) {
       publishDate: new Date(pubDate),
       heroImage,
       tags,
-      author,       // { name: string, image: string }
+      author,       // { name, image }
       category
     };
   });
 }
 
 const allPosts = [
-  ...flatten(tutorials,     'tutorials'),
-  ...flatten(architectures, 'architecture'),
-  ...flatten(tools,         'tools'),
-  ...flatten(cases,         'case-studies'),
+  ...flatten(tutorials,    'tutorials'),
+  ...flatten(architectures,'architecture'),
+  ...flatten(tools,        'tools'),
+  ...flatten(cases,        'case-studies'),
 ];
 
 // 3. Sort by publishDate descending
 allPosts.sort((a, b) => b.publishDate - a.publishDate);
 
-// 4. Pick out Featured (first 2) and Recent (next 4)
+// 4. Slice out Featured (first 2) and Recent (next 4)
 const featuredPosts = allPosts.slice(0, 2);
 const recentPosts   = allPosts.slice(2, 6);
 ---
@@ -97,7 +90,7 @@ const recentPosts   = allPosts.slice(2, 6);
     <div class="max-w-7xl mx-auto px-4">
       <h2 class="text-3xl font-bold mb-8">Latest Articles</h2>
       <div class="grid lg:grid-cols-3 gap-8">
-        <!-- Main Content -->
+        <!-- Main column -->
         <div class="lg:col-span-2 grid md:grid-cols-2 gap-8">
           {recentPosts.map(post => (
             <a
@@ -131,10 +124,10 @@ const recentPosts   = allPosts.slice(2, 6);
           <div class="bg-white rounded-lg p-6 shadow-sm">
             <h3 class="text-xl font-semibold mb-4">Resources</h3>
             <ul class="space-y-3">
-              <li><a href="/getting-started" class="hover:underline">Getting Started Guide</a></li>
-              <li><a href="/code-examples" class="hover:underline">Code Examples</a></li>
-              <li><a href="/tools" class="hover:underline">Tools & Libraries</a></li>
-              <li><a href="/case-studies" class="hover:underline">Case Studies</a></li>
+              <li><a href="/getting-started"    class="hover:underline">Getting Started Guide</a></li>
+              <li><a href="/code-examples"       class="hover:underline">Code Examples</a></li>
+              <li><a href="/tools"               class="hover:underline">Tools & Libraries</a></li>
+              <li><a href="/case-studies"        class="hover:underline">Case Studies</a></li>
             </ul>
           </div>
         </div>
