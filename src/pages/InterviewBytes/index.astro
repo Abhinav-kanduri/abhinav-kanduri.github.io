@@ -10,12 +10,12 @@ const posts = Object.entries(modules)
   })
   .sort((a, b) => b.date - a.date);
 ---
-<Layout title="Tools">
-  <h1 class="text-4xl font-bold mb-8">Tools</h1>
+<Layout title="InterviewBytes">
+  <h1 class="text-4xl font-bold mb-8">InterviewBytes</h1>
   <ul class="space-y-6">
     {posts.map(p => (
       <li>
-        <a href={`/tools/${p.slug}`} class="text-2xl font-semibold text-accent-600 hover:underline">
+        <a href={`/InterviewBytes/${p.slug}`} class="text-2xl font-semibold text-accent-600 hover:underline">
           {p.title}
         </a>
         {p.description && <p class="text-gray-600">{p.description}</p>}
