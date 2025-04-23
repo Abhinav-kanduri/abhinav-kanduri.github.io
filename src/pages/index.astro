@@ -8,7 +8,7 @@ import TagList    from '../components/TagList.astro';
 // 1. Glob all posts
 const tutorials     = import.meta.glob('./tutorials/*.md',    { eager: true });
 const architectures = import.meta.glob('./architecture/*.md', { eager: true });
-const tools         = import.meta.glob('./tools/*.md',        { eager: true });
+const Interview-Questions         = import.meta.glob('./Interview-Questions/*.md',        { eager: true });
 const cases         = import.meta.glob('./case-studies/*.md', { eager: true });
 
 // 2. Normalize to { slug, data, category }
@@ -34,7 +34,7 @@ function flattenPosts(mods, category) {
 let allPosts = [
   ...flattenPosts(tutorials,    'tutorials'),
   ...flattenPosts(architectures,'architecture'),
-  ...flattenPosts(tools,        'tools'),
+  ...flattenPosts(Interview-Questions,        'Interview-Questions'),
   ...flattenPosts(cases,        'case-studies'),
 ];
 
@@ -101,7 +101,7 @@ const popularTags = Array.from(new Set(allPosts.flatMap(p => p.data.tags)));
             <ul class="space-y-3">
               <li><a href="/getting-started" class="hover:underline">Getting Started Guide</a></li>
               <li><a href="/code-examples"    class="hover:underline">Code Examples</a></li>
-              <li><a href="/tools"            class="hover:underline">Tools & Libraries</a></li>
+              <li><a href="/Interview-Questions"            class="hover:underline">Interview-Questions & Libraries</a></li>
               <li><a href="/case-studies"     class="hover:underline">Case Studies</a></li>
             </ul>
           </div>
