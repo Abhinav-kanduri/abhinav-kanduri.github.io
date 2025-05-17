@@ -3,10 +3,10 @@ import ThemeToggle from './ThemeToggle.astro';
 import SearchBar from './SearchBar.astro';
 
 const navItems = [
-  { text: 'Tutorials', href: '/tutorials' },
-  { text: 'Architecture', href: '/architecture' },
-  { text: 'InterviewBytes', href: '/InterviewBytes' },
-  { text: 'Case Studies', href: '/case-studies' },
+  { text: 'Tutorials', href: '/tutorials', icon: '/src/assets/tutorials.svg' },
+  { text: 'Architecture', href: '/architecture', icon: '/src/assets/architecture.svg' },
+  { text: 'InterviewBytes', href: '/InterviewBytes', icon: '/src/assets/interviewbytes.svg' },
+  { text: 'Case Studies', href: '/case-studies', icon: '/src/assets/case-studies.svg' },
 ];
 ---
 
@@ -28,9 +28,10 @@ const navItems = [
         {navItems.map(item => (
           <a 
             href={item.href}
-            class="text-gray-600 dark:text-gray-300 hover:text-primary-900 dark:hover:text-white transition-colors duration-200"
+            class="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-primary-900 dark:hover:text-white transition-colors duration-200"
           >
-            {item.text}
+            <img src={item.icon} alt={item.text + ' icon'} class="w-7 h-7" />
+            <span>{item.text}</span>
           </a>
         ))}
       </nav>
@@ -64,9 +65,10 @@ const navItems = [
       {navItems.map(item => (
         <a 
           href={item.href}
-          class="block text-gray-600 dark:text-gray-300 hover:text-primary-900 dark:hover:text-white transition-colors duration-200"
+          class="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-primary-900 dark:hover:text-white transition-colors duration-200"
         >
-          {item.text}
+          <img src={item.icon} alt={item.text + ' icon'} class="w-7 h-7" />
+          <span>{item.text}</span>
         </a>
       ))}
       <a href="/subscribe" class="block btn btn-primary w-full text-center">
