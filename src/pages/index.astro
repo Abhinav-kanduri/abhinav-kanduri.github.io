@@ -185,15 +185,17 @@ const recentWork = [
 ---
 
 <Layout title="Home">
-  <!-- Hero Section with Banner and Category Navigation -->
+  <!-- Hero Section with Banner, Parallax Blobs, and Dynamic Headline -->
   <section class="relative min-h-[60vh] flex flex-col items-center justify-center bg-gradient-to-br from-primary-900 via-primary-800 to-primary-900 text-white overflow-hidden">
-    <img src="/images/banner-AI.png" alt="AI Banner" class="w-full max-h-80 object-cover object-center rounded-b-3xl shadow-lg border-b-4 border-accent-600" style="margin-bottom: -3rem;" />
+    <!-- Parallax SVG Blobs -->
+    <svg class="absolute top-[-80px] left-[-120px] w-[400px] h-[400px] opacity-30 z-0 parallax-blob" viewBox="0 0 400 400" fill="none"><ellipse cx="200" cy="200" rx="200" ry="180" fill="#7C3AED"/></svg>
+    <svg class="absolute bottom-[-100px] right-[-100px] w-[300px] h-[300px] opacity-20 z-0 parallax-blob" viewBox="0 0 300 300" fill="none"><ellipse cx="150" cy="150" rx="150" ry="120" fill="#00FFF7"/></svg>
     <div class="relative z-10 flex flex-col items-center justify-center mt-8">
       <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-center">
         Welcome to <span class="text-accent-400">GenAI & Data Engineering</span>
       </h1>
-      <p class="text-lg sm:text-xl text-gray-200 mb-8 max-w-2xl text-center">
-        Explore hands-on tutorials, deep-dive architectures, interview insights, and real-world case studies in AI, data engineering, and software systems.
+      <p class="text-lg sm:text-xl text-gray-200 mb-2 max-w-2xl text-center">
+        Explore hands-on <span id="dynamic-keyword" class="text-accent-400 transition-opacity duration-700">tutorials</span>, deep-dive architectures, interview insights, and real-world case studies in AI, data engineering, and software systems.
       </p>
       <!-- Category Navigation Grid -->
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full max-w-4xl mx-auto">
@@ -221,11 +223,11 @@ const recentWork = [
     </div>
   </section>
 
-  <!-- About Me Section -->
+  <!-- About Me Section with Glassmorphism and Reveal Animation -->
   <section class="py-20 bg-white dark:bg-primary-900">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid lg:grid-cols-2 gap-12 items-center">
-        <div class="space-y-6">
+        <div class="space-y-6 glass about-text opacity-0 translate-x-12 transition-all duration-700">
           <h2 class="text-4xl font-bold text-gray-900 dark:text-white">About Me</h2>
           <p class="text-xl text-gray-600 dark:text-gray-300">
             I'm a passionate technologist focused on bridging the gap between cutting-edge AI and robust data engineering. With expertise in building scalable systems and implementing AI solutions, I help organizations transform their technical challenges into opportunities for innovation.
@@ -239,7 +241,7 @@ const recentWork = [
             </a>
           </div>
         </div>
-        <div class="relative">
+        <div class="relative about-img opacity-0 -translate-x-12 transition-all duration-700">
           <div class="aspect-w-4 aspect-h-3 rounded-2xl overflow-hidden">
             <img src="/images/Profile-photo.jpg" alt="Profile photo" class="object-cover w-full h-full" />
           </div>
@@ -601,4 +603,42 @@ const recentWork = [
       });
     });
   });
+
+  // Parallax blobs
+  window.addEventListener('scroll', () => {
+    document.querySelectorAll('.parallax-blob').forEach((el, i) => {
+      el.style.transform = `translateY(${window.scrollY * (i === 0 ? 0.15 : 0.08)}px)`;
+    });
+  });
+
+  // Dynamic headline cycling
+  const keywords = ['tutorials', 'architectures', 'interview insights', 'case studies'];
+  let kwIndex = 0;
+  setInterval(() => {
+    const el = document.getElementById('dynamic-keyword');
+    if (!el) return;
+    el.style.opacity = 0;
+    setTimeout(() => {
+      kwIndex = (kwIndex + 1) % keywords.length;
+      el.textContent = keywords[kwIndex];
+      el.style.opacity = 1;
+    }, 700);
+  }, 2200);
+
+  // About Me reveal on scroll
+  const aboutImg = document.querySelector('.about-img');
+  const aboutText = document.querySelector('.about-text');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        aboutImg.classList.remove('opacity-0', '-translate-x-12');
+        aboutImg.classList.add('opacity-100', 'translate-x-0');
+        aboutText.classList.remove('opacity-0', 'translate-x-12');
+        aboutText.classList.add('opacity-100', 'translate-x-0');
+        observer.disconnect();
+      }
+    });
+  }, { threshold: 0.3 });
+  if (aboutImg) observer.observe(aboutImg);
+  if (aboutText) observer.observe(aboutText);
 </script>

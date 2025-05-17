@@ -115,3 +115,62 @@
     to { transform: translateY(0); opacity: 1; }
   }
 }
+
+/* Design Tokens */
+:root {
+  --color-bg: #0F172A;
+  --color-accent: #7C3AED;
+  --color-accent-cyan: #00FFF7;
+  --color-glass: rgba(255,255,255,0.18);
+  --color-glass-border: rgba(255,255,255,0.35);
+  --color-glass-blur: 16px;
+  --radius-lg: 1.5rem;
+  --radius-md: 1rem;
+  --radius-sm: 0.5rem;
+  --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+}
+
+body {
+  background: var(--color-bg);
+  color: #fff;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+h1 { font-size: 3rem; line-height: 1.1; font-weight: 700; }
+h2 { font-size: 2.25rem; line-height: 1.15; font-weight: 600; }
+h3 { font-size: 1.75rem; line-height: 1.2; font-weight: 600; }
+
+.section {
+  padding-top: 80px;
+  padding-bottom: 80px;
+}
+
+.glass {
+  background: var(--color-glass);
+  border: 1.5px solid var(--color-glass-border);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(var(--color-glass-blur));
+  -webkit-backdrop-filter: blur(var(--color-glass-blur));
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+}
+
+.floating-label {
+  position: relative;
+}
+.floating-label input:focus + label,
+.floating-label input:not(:placeholder-shown) + label {
+  transform: translateY(-1.5rem) scale(0.85);
+  color: var(--color-accent);
+}
+.floating-label label {
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+  background: transparent;
+  color: #aaa;
+  pointer-events: none;
+  transition: all 0.2s;
+}

@@ -11,6 +11,8 @@ const navItems = [
 ---
 
 <header class="sticky top-0 z-50 bg-white/80 dark:bg-primary-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 transition-colors duration-200">
+  <!-- Scroll Progress Bar -->
+  <div id="scroll-progress-bar" class="fixed top-0 left-0 h-1 w-0 bg-accent-600 z-50 transition-all duration-200" aria-hidden="true"></div>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between items-center h-16">
       <!-- Logo and site name -->
@@ -99,7 +101,12 @@ const navItems = [
     } else {
       header?.classList.remove('shadow-md');
     }
-
     lastScrollY = window.scrollY;
+    // Scroll progress bar
+    const bar = document.getElementById('scroll-progress-bar');
+    const scrollTop = window.scrollY;
+    const docHeight = document.body.scrollHeight - window.innerHeight;
+    const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    if (bar) bar.style.width = progress + '%';
   });
 </script>
