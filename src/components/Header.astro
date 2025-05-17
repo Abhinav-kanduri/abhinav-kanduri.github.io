@@ -3,10 +3,10 @@ import ThemeToggle from './ThemeToggle.astro';
 import SearchBar from './SearchBar.astro';
 
 const navItems = [
-  { text: 'Tutorials', href: '/tutorials', icon: '/src/assets/tutorials.svg' },
-  { text: 'Architecture', href: '/architecture', icon: '/src/assets/architecture.svg' },
-  { text: 'InterviewBytes', href: '/InterviewBytes', icon: '/src/assets/interviewbytes.svg' },
-  { text: 'Case Studies', href: '/case-studies', icon: '/src/assets/case-studies.svg' },
+  { text: 'Tutorials', href: '/tutorials', icon: '/icons/tutorials.svg' },
+  { text: 'Architecture', href: '/architecture', icon: '/icons/architecture.svg' },
+  { text: 'InterviewBytes', href: '/InterviewBytes', icon: '/icons/interviewbytes.svg' },
+  { text: 'Case Studies', href: '/case-studies', icon: '/icons/case-studies.svg' },
 ];
 ---
 
@@ -30,7 +30,7 @@ const navItems = [
             href={item.href}
             class="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-primary-900 dark:hover:text-white transition-colors duration-200"
           >
-            <img src={item.icon} alt={item.text + ' icon'} class="w-7 h-7" />
+            <img src={item.icon} alt={item.text + ' icon'} class="w-7 h-7 text-accent-400" />
             <span>{item.text}</span>
           </a>
         ))}
@@ -67,7 +67,7 @@ const navItems = [
           href={item.href}
           class="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-primary-900 dark:hover:text-white transition-colors duration-200"
         >
-          <img src={item.icon} alt={item.text + ' icon'} class="w-7 h-7" />
+          <img src={item.icon} alt={item.text + ' icon'} class="w-7 h-7 text-accent-400" />
           <span>{item.text}</span>
         </a>
       ))}
