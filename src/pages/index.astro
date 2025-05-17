@@ -1,30 +1,33 @@
 ---
 // src/pages/index.astro
-import Layout     from '../layouts/Layout.astro';
-import BlogCard   from '../components/BlogCard.astro';
+import Layout from '../layouts/Layout.astro';
+import BlogCard from '../components/BlogCard.astro';
 import Newsletter from '../components/Newsletter.astro';
-import TagList    from '../components/TagList.astro';
+import TagList from '../components/TagList.astro';
+import Welcome from '../components/Welcome.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
+import SearchBar from '../components/SearchBar.astro';
 
-// 1. Glob all posts
-const tutorials     = import.meta.glob('./tutorials/*.md',    { eager: true });
+// Import all content
+const tutorials = import.meta.glob('./tutorials/*.md', { eager: true });
 const architectures = import.meta.glob('./architecture/*.md', { eager: true });
-const InterviewBytes         = import.meta.glob('./InterviewBytes/*.md',        { eager: true });
-const cases         = import.meta.glob('./case-studies/*.md', { eager: true });
+const InterviewBytes = import.meta.glob('./InterviewBytes/*.md', { eager: true });
+const cases = import.meta.glob('./case-studies/*.md', { eager: true });
 
-// 2. Normalize to { slug, data, category }
+// Normalize posts
 function flattenPosts(mods, category) {
   return Object.entries(mods).map(([path, mod]) => {
     const slug = path.split('/').pop().replace(/\.md$/, '');
-    const fm   = mod.frontmatter;
+    const fm = mod.frontmatter;
     return {
       slug,
       data: {
-        title:       fm.title,
+        title: fm.title,
         description: fm.description,
         publishDate: new Date(fm.pubDate),
-        heroImage:   fm.heroImage,
-        tags:        fm.tags,
-        author:      fm.author,  // { name, image }
+        heroImage: fm.heroImage,
+        tags: fm.tags,
+        author: fm.author,
       },
       category
     };
@@ -32,155 +35,338 @@ function flattenPosts(mods, category) {
 }
 
 let allPosts = [
-  ...flattenPosts(tutorials,    'tutorials'),
-  ...flattenPosts(architectures,'architecture'),
-  ...flattenPosts(InterviewBytes,        'InterviewBytes'),
-  ...flattenPosts(cases,        'case-studies'),
+  ...flattenPosts(tutorials, 'tutorials'),
+  ...flattenPosts(architectures, 'architecture'),
+  ...flattenPosts(InterviewBytes, 'InterviewBytes'),
+  ...flattenPosts(cases, 'case-studies'),
 ];
 
-// 3. Sort newest first
+// Sort and filter posts
 allPosts.sort((a, b) => b.data.publishDate - a.data.publishDate);
-
-// 4. Pick featured (0–1) + recent (2–5)
 const featuredPosts = allPosts.slice(0, 2);
-const recentPosts   = allPosts.slice(2, 6);
-
-// 5. Gather unique tags
+const recentPosts = allPosts.slice(2, 6);
 const popularTags = Array.from(new Set(allPosts.flatMap(p => p.data.tags)));
+
+// Skills data
+const skills = [
+  { name: 'AI/ML', level: 90, icon: '🤖' },
+  { name: 'Data Engineering', level: 85, icon: '📊' },
+  { name: 'Cloud Architecture', level: 88, icon: '☁️' },
+  { name: 'Full Stack Development', level: 82, icon: '💻' },
+  { name: 'DevOps', level: 80, icon: '🔄' },
+  { name: 'System Design', level: 85, icon: '🏗️' },
+];
+
+// Services data
+const services = [
+  {
+    title: 'AI Solutions',
+    description: 'Custom AI solutions and ML model development',
+    icon: '🤖'
+  },
+  {
+    title: 'Data Engineering',
+    description: 'Scalable data pipelines and ETL processes',
+    icon: '📊'
+  },
+  {
+    title: 'Cloud Architecture',
+    description: 'Cloud-native solutions and infrastructure',
+    icon: '☁️'
+  },
+  {
+    title: 'Technical Consulting',
+    description: 'Expert guidance on technology decisions',
+    icon: '💡'
+  }
+];
+
+// Testimonials data
+const testimonials = [
+  {
+    quote: "Transformed our data infrastructure with cutting-edge solutions.",
+    author: "Sarah Chen",
+    role: "CTO, TechCorp"
+  },
+  {
+    quote: "Exceptional expertise in AI implementation.",
+    author: "Michael Rodriguez",
+    role: "Lead Data Scientist"
+  },
+  {
+    quote: "Delivered scalable solutions that exceeded expectations.",
+    author: "Emily Thompson",
+    role: "Engineering Director"
+  }
+];
 ---
 
 <Layout title="Home">
-  <!-- Hero -->
-  <section class="bg-gradient-to-br from-primary-900 to-primary-800 text-white py-16 sm:py-24">
-    <div class="max-w-4xl mx-auto text-center px-4">
-      <h1 class="text-5xl font-bold mb-4">
-        Bridging cutting‑edge Generative AI with rock‑solid Data Engineering
-      </h1>
-      <p class="text-xl mb-8">
-        Clear, code-first tutorials and deep-dive case studies at the intersection of AI and data infrastructure.
-      </p>
-      <div class="flex flex-wrap justify-center gap-4">
-        <a href="/tutorials" class="btn btn-primary px-6 py-3">Browse Tutorials</a>
-        <a href="/subscribe" class="btn btn-outline px-6 py-3">Subscribe</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Featured Insights -->
-  <section class="bg-gray-50 dark:bg-primary-900 py-16">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <h2 class="text-3xl font-bold mb-8">Featured Insights</h2>
-      <div class="grid md:grid-cols-2 gap-8">
-        {featuredPosts.map(post => 
-          <BlogCard post={post} featured />
-        )}
-      </div>
-    </div>
-  </section>
-
-  <!-- Latest Articles + Sidebar -->
-  <section class="py-16">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <h2 class="text-3xl font-bold mb-8">Latest Articles</h2>
-      <div class="grid lg:grid-cols-3 gap-8">
-        <!-- Main -->
-        <div class="lg:col-span-2 grid md:grid-cols-2 gap-8">
-          {recentPosts.map(post => 
-            <BlogCard post={post} />
-          )}
+  <!-- Hero Section with Welcome Banner -->
+  <section class="relative min-h-screen bg-gradient-to-br from-primary-900 via-primary-800 to-primary-900 text-white overflow-hidden">
+    <div class="absolute inset-0 bg-grid-white/[0.05] bg-[size:60px_60px]"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary-900/90"></div>
+    
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-32">
+      <div class="text-center">
+        <h1 class="text-5xl sm:text-6xl font-bold mb-6 animate-fade-in">
+          Bridging AI Innovation with
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-accent-400 to-accent-600">
+            Engineering Excellence
+          </span>
+        </h1>
+        <p class="text-xl sm:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto animate-fade-in-delay">
+          Transforming complex technical challenges into elegant solutions through code-first tutorials and deep-dive case studies.
+        </p>
+        <div class="flex flex-wrap justify-center gap-4 animate-fade-in-delay-2">
+          <a href="/tutorials" class="btn btn-primary px-8 py-4 text-lg hover:scale-105 transition-transform">
+            Explore Tutorials
+          </a>
+          <a href="/case-studies" class="btn btn-outline px-8 py-4 text-lg hover:scale-105 transition-transform">
+            View Case Studies
+          </a>
         </div>
-        <!-- Sidebar -->
-        <aside class="space-y-8">
-          <div class="bg-white dark:bg-primary-800 rounded-xl p-6 shadow-sm">
-            <h3 class="text-xl font-semibold mb-4">Popular Topics</h3>
-            <TagList tags={popularTags} showAll />
-          </div>
-          <Newsletter />
-          <div class="bg-white dark:bg-primary-800 rounded-xl p-6 shadow-sm">
-            <h3 class="text-xl font-semibold mb-4">Resources</h3>
-            <ul class="space-y-3">
-              <li><a href="/getting-started" class="hover:underline">Getting Started Guide</a></li>
-              <li><a href="/code-examples"    class="hover:underline">Code Examples</a></li>
-              <li><a href="/InterviewBytes"            class="hover:underline">InterviewBytes & Libraries</a></li>
-              <li><a href="/case-studies"     class="hover:underline">Case Studies</a></li>
-            </ul>
-          </div>
-        </aside>
-      </div>
-      <!-- View All Articles -->
-      <div class="mt-10 flex justify-center">
-        <a href="/blog" class="btn btn-outline px-8 py-3">View All Articles</a>
       </div>
     </div>
   </section>
 
-  <!-- Why Engineers Trust Our Content -->
-  <section class="bg-gray-50 dark:bg-primary-900 py-16">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <h2 class="text-3xl font-bold mb-4">Why Engineers Trust Our Content</h2>
-      <p class="text-xl text-gray-600 dark:text-gray-300 mb-12 max-w-3xl mx-auto">
-        From code-first tutorials to deep-dive case studies, we deliver practical insights you can apply immediately.
-      </p>
+  <!-- About Me Section -->
+  <section class="py-20 bg-white dark:bg-primary-900">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div class="space-y-6">
+          <h2 class="text-4xl font-bold text-gray-900 dark:text-white">About Me</h2>
+          <p class="text-xl text-gray-600 dark:text-gray-300">
+            I'm a passionate technologist focused on bridging the gap between cutting-edge AI and robust data engineering. With expertise in building scalable systems and implementing AI solutions, I help organizations transform their technical challenges into opportunities for innovation.
+          </p>
+          <div class="flex gap-4">
+            <a href="/about" class="btn btn-primary">Learn More</a>
+            <a href="/contact" class="btn btn-outline">Get in Touch</a>
+          </div>
+        </div>
+        <div class="relative">
+          <div class="aspect-w-4 aspect-h-3 rounded-2xl overflow-hidden">
+            <img src="/images/profile.jpg" alt="Profile" class="object-cover w-full h-full" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills Showcase -->
+  <section class="py-20 bg-gray-50 dark:bg-primary-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-4xl font-bold text-center mb-12 text-gray-900 dark:text-white">Technical Expertise</h2>
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <div class="bg-white dark:bg-primary-800 rounded-xl p-6 shadow-sm">
-          <h3 class="text-xl font-semibold mb-2">Code-First Approach</h3>
-          <p class="text-gray-600 dark:text-gray-300">
-            Every tutorial includes working code examples you can copy, adapt, and deploy in your own projects.
-          </p>
-        </div>
-        <div class="bg-white dark:bg-primary-800 rounded-xl p-6 shadow-sm">
-          <h3 class="text-xl font-semibold mb-2">Production-Ready Patterns</h3>
-          <p class="text-gray-600 dark:text-gray-300">
-            Skip the prototyping phase with battle-tested patterns that scale in real-world environments.
-          </p>
-        </div>
-        <div class="bg-white dark:bg-primary-800 rounded-xl p-6 shadow-sm">
-          <h3 class="text-xl font-semibold mb-2">Cutting-Edge Relevance</h3>
-          <p class="text-gray-600 dark:text-gray-300">
-            Stay ahead with content that bridges emerging AI techniques and proven data infrastructure practices.
-          </p>
-        </div>
-        <div class="bg-white dark:bg-primary-800 rounded-xl p-6 shadow-sm">
-          <h3 class="text-xl font-semibold mb-2">Copy-Ready Solutions</h3>
-          <p class="text-gray-600 dark:text-gray-300">
-            Every code block is interactive with syntax highlighting and one-click copying functionality.
-          </p>
-        </div>
-        <div class="bg-white dark:bg-primary-800 rounded-xl p-6 shadow-sm">
-          <h3 class="text-xl font-semibold mb-2">Community Discussion</h3>
-          <p class="text-gray-600 dark:text-gray-300">
-            Learn from the experiences of other engineers through our active comment sections and forums.
-          </p>
-        </div>
-        <div class="bg-white dark:bg-primary-800 rounded-xl p-6 shadow-sm">
-          <h3 class="text-xl font-semibold mb-2">Visual Architecture</h3>
-          <p class="text-gray-600 dark:text-gray-300">
-            Complex systems explained with clear architecture diagrams and visual aids for better understanding.
-          </p>
-        </div>
+        {skills.map(skill => (
+          <div class="bg-white dark:bg-primary-900 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+            <div class="flex items-center gap-4 mb-4">
+              <span class="text-3xl">{skill.icon}</span>
+              <h3 class="text-xl font-semibold text-gray-900 dark:text-white">{skill.name}</h3>
+            </div>
+            <div class="w-full bg-gray-200 dark:bg-primary-700 rounded-full h-2.5">
+              <div 
+                class="bg-gradient-to-r from-accent-500 to-accent-600 h-2.5 rounded-full transition-all duration-1000"
+                style={`width: ${skill.level}%`}
+              ></div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   </section>
 
-  <!-- CTA -->
-  <section class="py-16 bg-gradient-to-br from-accent-600 to-accent-800 text-white">
-    <div class="max-w-7xl mx-auto px-4 text-center">
-      <h2 class="text-3xl font-bold mb-4">Ready to level up your AI & Data Engineering skills?</h2>
-      <p class="text-xl max-w-3xl mx-auto mb-8">
-        Join thousands of engineers who receive our monthly deep-dive newsletter with exclusive tutorials, case studies, and industry insights.
-      </p>
-      <form class="flex flex-col sm:flex-row justify-center gap-4 max-w-md mx-auto">
-        <input
-          type="email"
-          placeholder="Your email address"
-          required
-          class="flex-grow px-4 py-3 rounded-md bg-white/10 border border-white/20 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50"
-        />
-        <button class="btn px-6 py-3 bg-white text-accent-700 hover:bg-white/90">
-          Subscribe Now
-        </button>
+  <!-- Featured Projects -->
+  <section class="py-20 bg-white dark:bg-primary-900">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-4xl font-bold text-center mb-12 text-gray-900 dark:text-white">Featured Projects</h2>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {featuredPosts.map(post => (
+          <div class="group relative bg-white dark:bg-primary-800 rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300">
+            <div class="aspect-w-16 aspect-h-9">
+              <img 
+                src={post.data.heroImage} 
+                alt={post.data.title}
+                class="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-300"
+              />
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-semibold mb-2 text-gray-900 dark:text-white">{post.data.title}</h3>
+              <p class="text-gray-600 dark:text-gray-300 mb-4">{post.data.description}</p>
+              <a href={`/${post.category}/${post.slug}`} class="text-accent-600 hover:text-accent-500 font-medium">
+                Read More →
+              </a>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section class="py-20 bg-gray-50 dark:bg-primary-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-4xl font-bold text-center mb-12 text-gray-900 dark:text-white">Services Offered</h2>
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        {services.map(service => (
+          <div class="bg-white dark:bg-primary-900 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
+            <span class="text-4xl mb-4 block">{service.icon}</span>
+            <h3 class="text-xl font-semibold mb-2 text-gray-900 dark:text-white">{service.title}</h3>
+            <p class="text-gray-600 dark:text-gray-300">{service.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="py-20 bg-white dark:bg-primary-900">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-4xl font-bold text-center mb-12 text-gray-900 dark:text-white">What Clients Say</h2>
+      <div class="grid md:grid-cols-3 gap-8">
+        {testimonials.map(testimonial => (
+          <div class="bg-gray-50 dark:bg-primary-800 rounded-xl p-6 shadow-sm">
+            <p class="text-gray-600 dark:text-gray-300 mb-4">"{testimonial.quote}"</p>
+            <div>
+              <p class="font-semibold text-gray-900 dark:text-white">{testimonial.author}</p>
+              <p class="text-gray-500 dark:text-gray-400">{testimonial.role}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Recent Work -->
+  <section class="py-20 bg-gray-50 dark:bg-primary-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-4xl font-bold text-center mb-12 text-gray-900 dark:text-white">Recent Work</h2>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {recentPosts.map(post => (
+          <BlogCard post={post} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Form -->
+  <section class="py-20 bg-white dark:bg-primary-900">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-4xl font-bold text-center mb-12 text-gray-900 dark:text-white">Get in Touch</h2>
+      <form class="space-y-6">
+        <div class="grid md:grid-cols-2 gap-6">
+          <div>
+            <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Name</label>
+            <input type="text" id="name" name="name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-accent-500 focus:ring-accent-500 dark:bg-primary-800 dark:border-primary-700">
+          </div>
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+            <input type="email" id="email" name="email" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-accent-500 focus:ring-accent-500 dark:bg-primary-800 dark:border-primary-700">
+          </div>
+        </div>
+        <div>
+          <label for="message" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Message</label>
+          <textarea id="message" name="message" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-accent-500 focus:ring-accent-500 dark:bg-primary-800 dark:border-primary-700"></textarea>
+        </div>
+        <div class="text-center">
+          <button type="submit" class="btn btn-primary px-8 py-3">Send Message</button>
+        </div>
       </form>
-      <p class="text-sm mt-3 text-white/80">We respect your privacy. Unsubscribe at any time.</p>
+    </div>
+  </section>
+
+  <!-- Newsletter Section -->
+  <section class="py-20 bg-gradient-to-br from-accent-600 to-accent-800 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-4xl font-bold mb-4">Stay Updated</h2>
+      <p class="text-xl max-w-3xl mx-auto mb-8">
+        Subscribe to my newsletter for the latest insights on AI, data engineering, and technical tutorials.
+      </p>
+      <Newsletter />
     </div>
   </section>
 </Layout>
+
+<style>
+  /* Animations */
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 1s ease-out;
+  }
+
+  .animate-fade-in-delay {
+    animation: fade-in 1s ease-out 0.2s both;
+  }
+
+  .animate-fade-in-delay-2 {
+    animation: fade-in 1s ease-out 0.4s both;
+  }
+
+  /* Grid Background */
+  .bg-grid-white {
+    background-image: linear-gradient(to right, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+                      linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+  }
+
+  /* Button Styles */
+  .btn {
+    @apply inline-flex items-center justify-center rounded-lg font-medium transition-all duration-200;
+  }
+
+  .btn-primary {
+    @apply bg-accent-600 text-white hover:bg-accent-700 focus:ring-2 focus:ring-accent-500 focus:ring-offset-2;
+  }
+
+  .btn-outline {
+    @apply border-2 border-white text-white hover:bg-white/10 focus:ring-2 focus:ring-white focus:ring-offset-2;
+  }
+
+  /* Card Hover Effects */
+  .group:hover .group-hover\:scale-105 {
+    transform: scale(1.05);
+  }
+
+  /* Responsive Design */
+  @media (max-width: 640px) {
+    .text-5xl {
+      font-size: 2.5rem;
+    }
+    .text-6xl {
+      font-size: 3rem;
+    }
+  }
+</style>
+
+<script>
+  // Intersection Observer for scroll animations
+  document.addEventListener('DOMContentLoaded', () => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('animate-fade-in');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.1
+    });
+
+    document.querySelectorAll('section').forEach(section => {
+      observer.observe(section);
+    });
+  });
+
+  // Smooth scroll for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      document.querySelector(this.getAttribute('href')).scrollIntoView({
+        behavior: 'smooth'
+      });
+    });
+  });
+</script>

@@ -1,6 +1,6 @@
 # File: .github/workflows/deploy.yml
 name: 🚀 Deploy Astro to GitHub Pages
-
+# This workflow is used to deploy the Astro project to GitHub Pages
 on:
   push:
     branches: [ main ]
